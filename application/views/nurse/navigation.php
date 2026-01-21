@@ -184,23 +184,23 @@
 
 		 <!------send message----->
 
-		<li class="<?php if($page_name == 'message')echo 'active';?>">
+		<!-- <li class="<?php if($page_name == 'message')echo 'active';?>">
 			<span class="glow"></span>
 				<a href="<?php echo base_url();?>nurse/message" >
 					<i class=" fa fa-envelope p-r-10"></i>
 					<span class="hide-menu"><?php echo get_phrase('send_message');?></span>
 				</a>
-		</li>
+		</li> -->
 		
 		 <!------send message----->
 
-		<li class="<?php if($page_name == 'list_noticeboard')echo 'active';?>">
+		<!-- <li class="<?php if($page_name == 'list_noticeboard')echo 'active';?>">
 			<span class="glow"></span>
 				<a href="<?php echo base_url();?>nurse/list_noticeboard" >
 					<i class=" fa fa-list p-r-10"></i>
 					<span class="hide-menu"><?php echo get_phrase('list_noticeboard');?></span>
 				</a>
-		</li>
+		</li> -->
 	
 	
   <!------profile----->
