@@ -1,0 +1,119 @@
+<?php 
+$edit_data		=	$this->db->get_where('shedule' , array('shedule_id' => $param2) )->result_array();
+foreach ( $edit_data as $row):
+?>
+
+                    <?php echo form_open(base_url() . 'admin/add_shedule/do_update/'.$row['shedule_id'] , array('class' => 'form-horizontal form-groups-bordered validate','target'=>'_top', 'enctype' => 'multipart/form-data'));?>
+					
+                          <div class="form-group">
+                                    <label class="col-sm-12"><?php echo get_phrase('doctor');?>*</label>
+                                    <div class="col-sm-12">
+                                   <select class="form-control" name="doctor_id" data-style="btn-primary" required>
+                                         <option value=""><?php echo get_phrase('select'); ?></option>
+                                <?php
+                                $doctor = $this->db->get('doctor')->result_array();
+                                foreach ($doctor as $row3):
+                                    ?>
+                                    <option value="<?php echo $row3['doctor_id']; ?>"
+                                            <?php if ($row['doctor_id'] == $row3['doctor_id']) echo 'selected'; ?>>
+                                                <?php echo $row3['name']; ?>
+                                    </option>
+                                    <?php
+                                endforeach;
+                                ?>
+										 
+                                    </select>
+                                    </div>
+                                </div>
+								
+								 <div class="form-group">
+                                      <label class="col-md-12" for="example-text"><?php echo get_phrase('shedule_date');?>*</span></label>
+                                    <div class="col-md-12">
+                                        <input class="form-control select2 m-r-10" name="avail_day" type="date" value="<?php echo $row['avail_day']; ?>" id="example-date-input" required>
+                                    </div>
+                                </div>
+								
+								
+								 <div class="form-group">
+                                    <label class="col-sm-12"><?php echo get_phrase('department');?>*</label>
+                                    <div class="col-sm-12">
+                                   <select class="form-control" name="department_id" data-style="btn-primary" required>
+                                         <option value=""><?php echo get_phrase('select'); ?></option>
+                                <?php
+                                $department = $this->db->get('department')->result_array();
+                                foreach ($department as $row3):
+                                    ?>
+                                    <option value="<?php echo $row3['department_id']; ?>"
+                                            <?php if ($row['department_id'] == $row3['department_id']) echo 'selected'; ?>>
+                                                <?php echo $row3['name']; ?>
+                                    </option>
+                                    <?php
+                                endforeach;
+                                ?>
+										 
+                                    </select>
+                                    </div>
+                                </div>
+								
+								<div class="col-md-12">
+								<div class="form-group">
+									<div class="input-group clockpicker">
+                                    <input class="form-control" id="single-input" name="start_time" value="<?php echo $row['start_time']; ?>" placeholder="Start date">
+                                     <span class="input-group-btn">
+                  					<button type="button" id="check-minutes" class="btn waves-effect waves-light btn-success"><?php echo get_phrase('start_time');?></button>
+                 					</span> 
+
+									</div>
+                                    </div>
+                                    </div>
+									
+									
+									<div class="col-md-12">
+								<div class="form-group">
+								 <div class="input-group clockpicker">
+                                <input class="form-control" id="single-input" name="end_time" value="<?php echo $row['end_time']; ?>" placeholder="End date">
+                                <span class="input-group-btn">
+                  				<button type="button" id="check-minutes" class="btn waves-effect waves-light btn-success"><?php echo get_phrase('end_time');?></button>
+                  				</span> 
+
+                                </div>
+								</div>
+                                </div>
+								
+								
+								<div class="col-md-12">
+								<div class="form-group">
+								 <div class="input-group clockpicker">
+                     <input class="form-control" id="single-input" name="per_patient_time" value="<?php echo $row['per_patient_time']; ?>" placeholder="Time for each patient">
+                                <span class="input-group-btn">
+                  				<button type="button" id="check-minutes" class="btn waves-effect waves-light btn-success"><?php echo get_phrase('per_patient_time');?></button>
+                  				</span> 
+
+                                </div>
+								</div>
+                                </div>
+								
+								
+								<div class="form-group">
+                                    <div class="col-sm-12">
+                                  <input type="radio" class="check" id="square-radio-1" name="status" value="active" data-radio="iradio_square-red">
+                                <label for="square-radio-1"><?php echo get_phrase('active');?></label>
+                                          
+                                  <input type="radio" class="check" id="square-radio-2" name="status" value="inactive" checked data-radio="iradio_square-red">
+                                 <label for="square-radio-2"><?php echo get_phrase('inactive');?></label>
+								 </div>
+								 </div>
+								
+								
+						  
+						  
+						  
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-info"><?php echo get_phrase('update_shedule');?></button>
+                        </div>
+                    </form>
+					<br>
+                    <?php endforeach;?>
+                </div>
+			</div>
