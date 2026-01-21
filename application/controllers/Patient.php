@@ -336,35 +336,20 @@ class Patient extends CI_Controller
 
 	}
 	
-	
-	/******* PAY WITH VOGUE PAYMENT GATEWAY*******/
 
-	function pay_with_vogue($invoice_id)
+	
+	
+	/******* PAY WITH MIDTRANS PAYMENT GATEWAY*******/
+
+	function pay_with_midtrans($invoice_id)
 
 	{
 		if ($this->session->userdata('patient_login') != 1)
 			redirect(base_url() . 'login', 'refresh');
 			
 		
-		$page_data['page_name']    	= 'pay_with_vogue';
-		$page_data['page_title']   	= get_phrase('pay_with_vogue');
-		$page_data['view_invoice_details'] 	=	$this->db->get_where('invoice' , array('invoice_id' => $invoice_id) )->result_array();
-		$this->load->view('index', $page_data);
-
-	}
-	
-	
-	/******* PAY WITH PAYPAL PAYMENT GATEWAY*******/
-
-	function pay_with_paypal($invoice_id)
-
-	{
-		if ($this->session->userdata('patient_login') != 1)
-			redirect(base_url() . 'login', 'refresh');
-			
-		
-		$page_data['page_name']    	= 'pay_with_paypal';
-		$page_data['page_title']   	= get_phrase('pay_with_paypal');
+		$page_data['page_name']    	= 'pay_with_midtrans';
+		$page_data['page_title']   	= get_phrase('pay_with_midtrans');
 		$page_data['view_invoice_details'] 	=	$this->db->get_where('invoice' , array('invoice_id' => $invoice_id) )->result_array();
 		$this->load->view('index', $page_data);
 
@@ -637,6 +622,151 @@ function message($param1 = 'message_home', $param2 = '', $param3 = '')
 		))->result_array();
 
 		$this->load->view('index', $page_data);
+
+	}
+
+	/******* MIDTRANS CALLBACK HANDLER*******/
+
+	function midtrans_callback()
+
+	{
+
+		// Get JSON from Midtrans webhook
+
+		$json = file_get_contents('php://input');
+
+		$notification = json_decode($json);
+
+		
+
+		if ($notification) {
+
+			$transaction_status = $notification->transaction_status;
+
+			$order_id = $notification->order_id;
+
+			// Parse order_id: format "INV-{invoice_number}-{timestamp}" atau "INV-{invoice_number}"
+			// Midtrans menambahkan timestamp ke suffix order_id
+			$order_id_parts = explode('-', $order_id);
+			if (count($order_id_parts) >= 2 && $order_id_parts[0] == 'INV') {
+				// Ambil invoice_number (bagian setelah "INV-")
+				// Jika ada timestamp di akhir (bagian ketiga), abaikan
+				$invoice_number = $order_id_parts[1];
+				// Pastikan invoice_number_with_prefix sudah benar
+				$invoice_number_with_prefix = 'INV-' . $invoice_number;
+				
+				// Cari invoice berdasarkan invoice_number
+				$invoice = $this->db->get_where('invoice', array('invoice_number' => $invoice_number_with_prefix))->row();
+				
+				if ($invoice) {
+					// Check if transaction is successful
+					if ($transaction_status == 'settlement' || $transaction_status == 'capture') {
+						// Update invoice status to paid
+						$data['status'] = 'paid';
+						$this->db->where('invoice_id', $invoice->invoice_id);
+						$this->db->update('invoice', $data);
+						
+						// Update payment record yang sudah ada (jika ada) atau insert baru
+						$existing_payment = $this->db->get_where('payment', array(
+							'invoice_number' => $invoice_number_with_prefix,
+							'payment_method' => 'midtrans'
+						))->row();
+						
+						if ($existing_payment) {
+							// Update payment record yang sudah ada dengan data webhook
+							$payment_data_json = json_decode($existing_payment->description, true);
+							if (!is_array($payment_data_json)) {
+								$payment_data_json = array();
+							}
+							$payment_data_json['webhook_response'] = json_decode($json, true);
+							$payment_data_json['transaction_status'] = $transaction_status;
+							$payment_data_json['transaction_id'] = $notification->transaction_id;
+							
+							$data2['description'] = json_encode($payment_data_json);
+							$data2['amount'] = (string)$invoice->amount;
+							
+							$this->db->where('payment_id', $existing_payment->payment_id);
+							$this->db->update('payment', $data2);
+						} else {
+							// Insert payment record baru (sesuai struktur tabel)
+							$data2['invoice_number'] = $invoice_number_with_prefix;
+							$data2['payment_method'] = 'midtrans';
+							$data2['amount'] = (string)$invoice->amount;
+							$data2['type'] = 'income';
+							$data2['title'] = $invoice->title;
+							$data2['description'] = json_encode(array(
+								'webhook_response' => json_decode($json, true),
+								'transaction_status' => $transaction_status,
+								'transaction_id' => $notification->transaction_id
+							));
+							$data2['timestamp'] = strtotime(date("m/d/Y"));
+							$data2['year'] = date('Y');
+							
+							$this->db->insert('payment', $data2);
+						}
+					}
+				}
+			}
+
+		}
+
+		
+
+		http_response_code(200);
+
+	}
+
+	/******* MIDTRANS SUCCESS HANDLER*******/
+
+	function midtrans_success($invoice_id)
+
+	{
+
+		if ($this->session->userdata('patient_login') != 1)
+
+			redirect(base_url() . 'login', 'refresh');
+
+			
+
+		$this->session->set_flashdata('flash_message', get_phrase('payment_successfull'));
+
+		redirect(base_url() . 'patient/list_invoice/', 'refresh');
+
+	}
+
+	/******* MIDTRANS UNFINISH HANDLER*******/
+
+	function midtrans_unfinish($invoice_id)
+
+	{
+
+		if ($this->session->userdata('patient_login') != 1)
+
+			redirect(base_url() . 'login', 'refresh');
+
+			
+
+		$this->session->set_flashdata('flash_message', get_phrase('payment_unfinished'));
+
+		redirect(base_url() . 'patient/list_invoice/', 'refresh');
+
+	}
+
+	/******* MIDTRANS ERROR HANDLER*******/
+
+	function midtrans_error($invoice_id)
+
+	{
+
+		if ($this->session->userdata('patient_login') != 1)
+
+			redirect(base_url() . 'login', 'refresh');
+
+			
+
+		$this->session->set_flashdata('flash_message', get_phrase('payment_failed'));
+
+		redirect(base_url() . 'patient/list_invoice/', 'refresh');
 
 	}
 

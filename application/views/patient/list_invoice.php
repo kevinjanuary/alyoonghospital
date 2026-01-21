@@ -44,12 +44,8 @@
 				<?php endif; ?>
 				
 				<?php if ($row ['status']=='unpaid'):?>
-<a href="<?php echo base_url();?>patient/pay_with_vogue/<?php echo $row['invoice_id'];?>"><button type="button" class="btn btn-info  btn-sm"><i class="fa fa-money"></i> <?php echo get_phrase('pay_with_vogue');?></button></a>
-<?php endif; ?>
 
-<?php if ($row ['status']=='unpaid'):?>
-
-<a href="<?php echo base_url();?>patient/pay_with_paypal/<?php echo $row['invoice_id'];?>"><button type="button" class="btn btn-primary  btn-sm"><i class="fa fa-paypal"></i> <?php echo get_phrase('pay_with_paypal');?></button></a>
+<a href="<?php echo base_url();?>patient/pay_with_midtrans/<?php echo $row['invoice_id'];?>"><button type="button" class="btn btn-primary  btn-sm"><i class="fa fa-credit-card"></i> <?php echo get_phrase('pay_with_midtrans');?></button></a>
 						               			
 <?php endif; ?>
 				
