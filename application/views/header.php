@@ -1,8 +1,11 @@
  <!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top m-b-0">
             <div class="navbar-header"> <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i class="ti-menu"></i></a>
-                <div class="top-left-part"><a class="logo" href="#"><b><img src="<?php echo base_url();?>uploads/logo.png" width="200" height="50" alt="home" style="height: 50px;width: auto" /></b></a></div>
-                <ul class="nav navbar-top-links navbar-left hidden-xs">
+                <div class="top-left-part" style="margin-left: 5px; position: relative; overflow: hidden;"><a class="logo" href="#"><b><img src="<?php echo base_url();?>uploads/logo.png" width="200" height="50" alt="home" style="height: 50px;width: auto" /></b></a>
+                <div style="position: absolute; right: 0; top: 0; bottom: 0; width: 10px; background: #d6eaff">
+                </div>
+            </div>
+                <ul class="nav navbar-top-links navbar-left hidden-xs" style="background: #d6eaff">
                     <li><a href="javascript:void(0)" class="open-close hidden-xs waves-effect waves-light"><i class="icon-arrow-left-circle ti-menu"></i></a></li>
                     <li>
                         <form role="search" class="app-search hidden-xs">
@@ -41,13 +44,13 @@
                         </b> </a>
                        <ul class="dropdown-menu dropdown-user animated flipInY">
                             <li><a href="<?php echo base_url();?><?php echo $this->session->userdata('login_type');?>/manage_profile"><i class="ti-user"></i>  My Profile</a></li>
-                            <li><a href="<?php echo base_url();?>admin/message"><i class="ti-email"></i>  Inbox</a></li>
-      <li><a href="<?php echo base_url();?><?php echo $this->session->userdata('login_type');?>/manage_profile"><i class="ti-settings"></i> <?php echo get_phrase('account_settings');?></a></li>
+                            <!-- <li><a href="<?php echo base_url();?>admin/message"><i class="ti-email"></i>  Inbox</a></li> -->
+      <!-- <li><a href="<?php echo base_url();?><?php echo $this->session->userdata('login_type');?>/manage_profile"><i class="ti-settings"></i> <?php echo get_phrase('account_settings');?></a></li> -->
                             <li><a href="<?php echo base_url();?>login/logout"><i class="fa fa-power-off"></i>&nbsp;<?php echo get_phrase('logout');?></a></li>
                             </ul>
                         <!-- /.dropdown-user -->
                     </li>
-                    <li class="right-side-toggle"> <a class="waves-effect waves-light" href="javascript:void(0)"><i class="ti-settings"></i></a></li>
+                    <!-- <li class="right-side-toggle"> <a class="waves-effect waves-light" href="javascript:void(0)"><i class="ti-settings"></i></a></li> -->
                     <!-- /.dropdown -->
                 </ul>
             </div>

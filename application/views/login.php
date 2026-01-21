@@ -422,7 +422,7 @@ $abb = $this->db->get_where('settings', array('type' => 'abb'))->row()->descript
                 $("input[name=password]").val('123456');
             });
             $('#patient').click(function () {
-                $("input[name=email]").val('patient@patient.com');
+                $("input[name=email]").val('kevin@alyoong.id');
                 $("input[name=password]").val('123456');
             });
             $('#doctor').click(function () {
