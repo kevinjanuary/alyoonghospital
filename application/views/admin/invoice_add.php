@@ -24,7 +24,7 @@
                       <label class="col-md-12"><?php echo get_phrase('invoice_number'); ?></label>
 
                     <div class="col-md-12">
-                        <input type="text" class="form-control" name="invoice_number"  value="<?php echo rand(10000, 100000); ?>"  readonly>
+                        <input type="text" class="form-control" name="invoice_number"  value="INV-<?php echo date('Ymd') . rand(111111111, 999999999); ?>"  readonly>
                     </div>
                 </div>
 

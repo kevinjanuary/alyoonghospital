@@ -213,7 +213,7 @@ foreach ($view_invoice_details as $row):
 
 <div align="right">       
     <?php if ($payment_link && $payment_link != '#'): ?>
-        <a href="<?php echo $payment_link; ?>" target="_blank" class="btn btn-primary btn-sm">
+        <a href="<?php echo $payment_link; ?>" target="_blank" class="btn btn-primary btn-sm" style="color:white;">
             <i class="fa fa-credit-card"></i> <?php echo get_phrase('pay_with_midtrans');?>
         </a>
     <?php else: ?>
